@@ -1,43 +1,56 @@
 // create a stateless widget called HomeScreen
-
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'models.dart';
 
-Widget HomeScreen() {
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({Key? key}) : super(key: key);
   Future<List<Character>> fetchBbCharacters() async {
     // fetch the data from the api
-    // https://breakingbadapi.com/api/characters
-    // use the http package to make the request
-    // https://pub.dev/packages/http
-    // use the jsonDecode function to convert the response to a list of maps
-    // https://api.dart.dev/stable/2.10.4/dart-convert/jsonDecode.html
-    // use the map function to convert the list of maps to a list of Character objects
-    // https://api.dart.dev/stable/2.10.4/dart-core/Iterable/map.html
-    // return the list of Character objects
+    //returns: Future<List<Character>>
+    final response =
+        await http.get(Uri.parse('https://breakingbadapi.com/api/characters'));
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse
+          .map((character) => Character.fromJson(character))
+          .toList();
+    } else {
+      throw Exception('Failed to load characters from API');
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Breaking Bad'),
+        title: Text('Breaking Bad Quotes'),
       ),
-      body: FutureBuilder(
+      body: FutureBuilder<List<Character>>(
         future: fetchBbCharacters(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
+        builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  title: Text(snapshot.data[index].name),
-                  leading: Image.network(snapshot.data[index].imgUrl),
+            List<Character>? data = snapshot.data;
+            return GridView.builder(
+              itemCount: data!.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+              ),
+              itemBuilder: (context, index) {
+                return Card(
+                  child: Column(
+                    children: [
+                      Text(data[index].name),
+                    ],
+                  ),
                 );
               },
             );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
           }
+          return const CircularProgressIndicator();
         },
       ),
     );
