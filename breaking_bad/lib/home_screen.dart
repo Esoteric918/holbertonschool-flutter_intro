@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'models.dart';
+import 'character_tile.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -35,30 +36,29 @@ class HomeScreen extends StatelessWidget {
             return GridView.builder(
               itemCount: data!.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                mainAxisExtent: 15,
                 crossAxisCount: 2,
-                childAspectRatio: 5 / 3,
-                crossAxisSpacing: 2,
+                crossAxisSpacing: 20,
+                mainAxisSpacing: 20,
               ),
-              itemBuilder: (context, index) => GridTile(
-                footer: Container(
-                  margin: const EdgeInsets.only(bottom: 10, left: 10),
-                  child: Text(
-                    data[index].name,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 40,
-                    ),
-                  ),
-                ),
-                child: Image.network(
-                  data[index].imgUrl,
-                  fit: BoxFit.fitWidth,
-                ),
-              ),
+              itemBuilder: (context, index) {
+                return CharacterTile(character: data[index]);
+              },
             );
           } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
+            return Center(
+                child: Container(
+              width: 250,
+              height: 150,
+              alignment: const Alignment(0, 0),
+              color: Colors.red,
+              child: const Text(
+                'Error',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 40,
+                ),
+              ),
+            ));
           }
           return const CircularProgressIndicator();
         },
