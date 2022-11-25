@@ -25,7 +25,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Breaking Bad Quotes'),
+        title: const Text('Breaking Bad Quotes'),
       ),
       body: FutureBuilder<List<Character>>(
         future: fetchBbCharacters(),
@@ -35,17 +35,27 @@ class HomeScreen extends StatelessWidget {
             return GridView.builder(
               itemCount: data!.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                mainAxisExtent: 15,
                 crossAxisCount: 2,
+                childAspectRatio: 5 / 3,
+                crossAxisSpacing: 2,
               ),
-              itemBuilder: (context, index) {
-                return Card(
-                  child: Column(
-                    children: [
-                      Text(data[index].name),
-                    ],
+              itemBuilder: (context, index) => GridTile(
+                footer: Container(
+                  margin: const EdgeInsets.only(bottom: 10, left: 10),
+                  child: Text(
+                    data[index].name,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 40,
+                    ),
                   ),
-                );
-              },
+                ),
+                child: Image.network(
+                  data[index].imgUrl,
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
             );
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");

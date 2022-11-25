@@ -8,7 +8,7 @@ class Character {
 
   // create a constructor for the class that accepts one argument json with their corresponding values
 
-  // Character({this.name, this.imgUrl, this.id});
+  Character({required this.name, required this.imgUrl, required this.id});
 
   Character.fromJson(Map<String, dynamic> json)
       : name = json['name'],
