@@ -1,17 +1,39 @@
-// create a new class called Character with the following properties
-// name, imgUrl, id
-
 class Character {
-  final String name;
-  final String imgUrl;
-  final int id;
+  String name;
+  String imgUrl;
+  int id;
 
-  // create a constructor for the class that accepts one argument json with their corresponding values
+  Character({
+    this.name = 'default',
+    this.imgUrl = 'url',
+    this.id = 0,
+  });
 
-  Character({required this.name, required this.imgUrl, required this.id});
+  static Character fromJson(Map<String, dynamic> json) {
+    return Character(
+      name: json['name'],
+      imgUrl: json['img'],
+      id: json['char_id'],
+    );
+  }
+}
 
-  Character.fromJson(Map<String, dynamic> json)
-      : name = json['name'],
-        imgUrl = json['img'],
-        id = json['char_id'];
+class Quote {
+  String quote;
+  String author;
+  int id;
+
+  Quote({
+    this.quote = 'default',
+    this.author = 'url',
+    this.id = 0,
+  });
+
+  static Quote fromJson(Map<String, dynamic> json) {
+    return Quote(
+      quote: json['quote'],
+      author: json['author'],
+      id: json['quote_id'],
+    );
+  }
 }

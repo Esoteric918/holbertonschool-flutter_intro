@@ -1,35 +1,30 @@
 import 'package:flutter/material.dart';
+import 'quotes_screen.dart';
 import 'models.dart';
 
 class CharacterTile extends StatelessWidget {
   final Character character;
-// Inside CharacterTile: Add class attribute :
-  const CharacterTile({Key? key, required this.character}) : super(key: key);
+
+  const CharacterTile(this.character, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => onTap(character),
-      child: GridTile(
-        child: Image.network(
-          character.imgUrl,
-          fit: BoxFit.fitWidth,
-        ),
-        footer: Container(
-          margin: const EdgeInsets.only(bottom: 20, left: 20),
-          child: Text(
-            character.name,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 35,
+    return (GridTile(
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => QuotesScreen(character),
             ),
-          ),
-        ),
+          );
+        },
+        child: Image.network(character.imgUrl),
       ),
-    );
-  }
-
-  String onTap(Character character) {
-    return (character.name);
+      footer: GridTileBar(
+        title: Text(character.name),
+        backgroundColor: Colors.black54,
+      ),
+    ));
   }
 }
